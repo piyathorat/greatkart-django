@@ -1,11 +1,13 @@
 from django.http import HttpResponse
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import redirect, render,get_object_or_404
 from carts.models import CartItem
 from carts.views import _cart_id
 from category.models import Category
-from .models import Product
+from store.forms import ReviewForm
+from .models import Product, ReviewRating
 from django.db.models import Q
 from django.core.paginator import EmptyPage,PageNotAnInteger,Paginator
+from django.contrib import messages
 # Create your views here.
 def store(req ,category_slug=None):
     categories=None
@@ -40,10 +42,13 @@ def product_detail(req,category_slug,product_slug):
     except Exception as e:
         raise e
     
+    #get the review rating
+    reviews=ReviewRating.objects.filter(product_id=single_product.id,status=True)
 
     context={
         "single_product":single_product,
         'in_cart':in_cart,
+        'reviews':reviews,
     }
     return render(req,'store/product_detail.html',context)
 
@@ -63,3 +68,30 @@ def search(req):
     return render(req,'store/store.html' ,context)
 
 
+def submit_review(req, product_id):
+    url = req.META.get('HTTP_REFERER')
+
+    if req.method == 'POST':
+        try:
+            reviews = ReviewRating.objects.get(
+                user__id=req.user.id,
+                product__id=product_id
+            )
+            form = ReviewForm(req.POST, instance=reviews)
+            form.save()
+            messages.success(req, 'Thank you! Your review has been updated')
+            return redirect(url)
+
+        except ReviewRating.DoesNotExist:
+            form = ReviewForm(req.POST)
+            if form.is_valid():
+                data = ReviewRating()
+                data.subject = form.cleaned_data['subject']
+                data.rating = form.cleaned_data['rating']
+                data.review = form.cleaned_data['review']
+                data.ip = req.META.get('REMOTE_ADDR')
+                data.product_id = product_id
+                data.user_id = req.user.id
+                data.save()
+                messages.success(req, 'Thank you! Your review has been submitted')
+                return redirect(url)
