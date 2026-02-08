@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container" style="margin:0 auto;width:50%;padding:50px;background:#f1f1f1;margin-top:50px;margin-bottom:50px;">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="text-center mb-4">
+                <img src="{% static 'images/logo.png' %}" style="max-height:40px;">
+            </div>
+
+            <ul class="list-unstyled text-right">
+                <li><strong>Invoiced To</strong></li>
+                <li>{{ order.full_name }}</li>
+                <li>{{ order.full_address }}</li>
+                <li>{{ order.city }}, {{ order.state }}</li>
+                <li>{{ order.country }}</li>
+            </ul>
+
+            <hr>
+
+            <ul class="list-unstyled">
+                <li><strong>Order Number:</strong> {{ order.order_number }}</li>
+                <li><strong>Order Date:</strong> {{ order.created_at }}</li>
+                <li><strong>Status:</strong> Order Placed</li>
+                <li><strong>Payment Method:</strong> Cash on Delivery</li>
+            </ul>
+
+            <hr>
+
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th class="text-right">Tax</th>
+                        <td class="text-center">${{ order.tax }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right">Grand Total</th>
+                        <td class="text-center"><strong>${{ order.order_total }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="text-center mt-4">Thank you for shopping with us ❤️</p>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

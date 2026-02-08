@@ -19,3 +19,17 @@
 	</div><!-- //container -->
 </footer>
 <!-- ========================= FOOTER END // ========================= -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJ+Y3RSKkR4k8z1XoDa5R4p1kG5h9E6f0zYtU="
+        crossorigin="anonymous"></script>
+
+<script>
+	$(document).ready(function(){
+		$('.thumb a').click(function(e){
+			e.preventDefault();
+			$('.mainImage img').attr('src',$(this).attr('href'));
+		})
+	})
+</script>
+</body>
+</html>
