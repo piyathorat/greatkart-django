@@ -11,11 +11,15 @@ User = get_user_model()
 user_name = "admin"
 email = "admin@gmail.com"
 password = "StrongPassword123"
+first_name = "Admin"
+last_name = "User"
 
 if not User.objects.filter(user_name=user_name).exists():
     User.objects.create_superuser(
         user_name=user_name,
         email=email,
+        first_name=first_name,
+        last_name=last_name,
         password=password
     )
     print("Superuser created successfully")
