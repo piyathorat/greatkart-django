@@ -45,14 +45,9 @@ def register(req):
                 'uid':urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
-            to_email = email
-            send_email = EmailMessage(mail_subject, message, to=[to_email])
-
-            try:
-                send_email.send()
-            except Exception as e:
-                print("Email failed:", e)
-
+            to_email=email
+            send_email=EmailMessage(mail_subject,message,to=[to_email])
+            send_email.send()
             # messages.success(req,'Thank you for registering with us. We have sent you verification link to your email address please verify it!')
             return redirect('/accounts/login/?command=verification&email='+email)
     else:
